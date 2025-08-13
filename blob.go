@@ -15,12 +15,12 @@ import (
 
 var cmdBlob = &cli.Command{
 	Name:  "blob",
-	Usage: "sub-commands for blobs",
+	Usage: "commands for media files (blobs)",
 	Flags: []cli.Flag{},
 	Commands: []*cli.Command{
 		&cli.Command{
 			Name:      "export",
-			Usage:     "download all blobs for given account",
+			Usage:     "download all public blobs for indicated account",
 			ArgsUsage: `<at-identifier>`,
 			Flags: []cli.Flag{
 				&cli.StringFlag{
@@ -38,7 +38,7 @@ var cmdBlob = &cli.Command{
 		&cli.Command{
 			Name:      "ls",
 			Aliases:   []string{"list"},
-			Usage:     "list all blobs for account",
+			Usage:     "list all public blobs for indicated account",
 			ArgsUsage: `<at-identifier>`,
 			Flags:     []cli.Flag{},
 			Action:    runBlobList,
@@ -58,7 +58,7 @@ var cmdBlob = &cli.Command{
 		},
 		&cli.Command{
 			Name:      "upload",
-			Usage:     "upload a file",
+			Usage:     "upload a file (blob) to PDS",
 			ArgsUsage: `<file>`,
 			Flags:     []cli.Flag{},
 			Action:    runBlobUpload,

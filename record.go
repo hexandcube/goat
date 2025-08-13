@@ -18,7 +18,7 @@ import (
 
 var cmdRecord = &cli.Command{
 	Name:  "record",
-	Usage: "sub-commands for repo records",
+	Usage: "commands for public repo records",
 	Flags: []cli.Flag{},
 	Commands: []*cli.Command{
 		cmdRecordGet,

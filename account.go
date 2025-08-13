@@ -18,7 +18,7 @@ import (
 
 var cmdAccount = &cli.Command{
 	Name:  "account",
-	Usage: "sub-commands for auth and account management",
+	Usage: "commands for auth session and account management",
 	Flags: []cli.Flag{},
 	Commands: []*cli.Command{
 		&cli.Command{

@@ -20,7 +20,7 @@ import (
 
 var cmdLex = &cli.Command{
 	Name:  "lex",
-	Usage: "sub-commands for Lexicons",
+	Usage: "commands for Lexicon schemas",
 	Flags: []cli.Flag{},
 	Commands: []*cli.Command{
 		&cli.Command{

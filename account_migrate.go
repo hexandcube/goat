@@ -19,7 +19,7 @@ import (
 
 var cmdAccountMigrate = &cli.Command{
 	Name:  "migrate",
-	Usage: "move account to a new PDS. requires full auth.",
+	Usage: "move account to a new PDS. requires full auth (not app password)",
 	Flags: []cli.Flag{
 		&cli.StringFlag{
 			Name:     "pds-host",

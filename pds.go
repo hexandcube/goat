@@ -14,7 +14,7 @@ import (
 
 var cmdPds = &cli.Command{
 	Name:  "pds",
-	Usage: "sub-commands for pds hosts",
+	Usage: "commands for inspecting and administering PDS hosts",
 	Flags: []cli.Flag{},
 	Commands: []*cli.Command{
 		&cli.Command{

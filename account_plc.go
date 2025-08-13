@@ -18,7 +18,7 @@ import (
 
 var cmdAccountPlc = &cli.Command{
 	Name:  "plc",
-	Usage: "sub-commands for managing PLC DID via PDS host",
+	Usage: "commands for managing PLC identity (DID) via PDS host",
 	Flags: []cli.Flag{
 		&cli.StringFlag{
 			Name:    "plc-host",

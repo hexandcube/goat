@@ -11,11 +11,11 @@ import (
 
 var cmdKey = &cli.Command{
 	Name:  "key",
-	Usage: "sub-commands for cryptographic keys",
+	Usage: "commands for managing cryptographic keys",
 	Commands: []*cli.Command{
 		&cli.Command{
 			Name:  "generate",
-			Usage: "outputs a new secret key",
+			Usage: "create a new secret key",
 			Flags: []cli.Flag{
 				&cli.StringFlag{
 					Name:    "type",

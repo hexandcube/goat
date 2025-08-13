@@ -12,11 +12,11 @@ import (
 
 var cmdSyntax = &cli.Command{
 	Name:  "syntax",
-	Usage: "sub-commands for string syntax helpers",
+	Usage: "commands for parsing identifier strings",
 	Commands: []*cli.Command{
 		&cli.Command{
 			Name:  "tid",
-			Usage: "sub-commands for TIDs",
+			Usage: "commands for TIDs",
 			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
@@ -40,7 +40,7 @@ var cmdSyntax = &cli.Command{
 		},
 		&cli.Command{
 			Name:  "handle",
-			Usage: "sub-commands for handle syntax",
+			Usage: "commands for handle syntax",
 			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
@@ -52,7 +52,7 @@ var cmdSyntax = &cli.Command{
 		},
 		&cli.Command{
 			Name:  "did",
-			Usage: "sub-commands for DID syntax",
+			Usage: "commands for DID syntax",
 			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
@@ -64,7 +64,7 @@ var cmdSyntax = &cli.Command{
 		},
 		&cli.Command{
 			Name:  "cid",
-			Usage: "sub-commands for CID syntax",
+			Usage: "commands for CID syntax",
 			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
@@ -76,7 +76,7 @@ var cmdSyntax = &cli.Command{
 		},
 		&cli.Command{
 			Name:  "rkey",
-			Usage: "sub-commands for record key syntax",
+			Usage: "commands for record key syntax",
 			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
@@ -88,7 +88,7 @@ var cmdSyntax = &cli.Command{
 		},
 		&cli.Command{
 			Name:  "nsid",
-			Usage: "sub-commands for NSID syntax",
+			Usage: "commands for NSID syntax",
 			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
@@ -100,7 +100,7 @@ var cmdSyntax = &cli.Command{
 		},
 		&cli.Command{
 			Name:  "at-uri",
-			Usage: "sub-commands for AT-URI syntax",
+			Usage: "commands for AT-URI syntax",
 			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
@@ -112,7 +112,7 @@ var cmdSyntax = &cli.Command{
 		},
 		&cli.Command{
 			Name:  "datetime",
-			Usage: "sub-commands for datetimes",
+			Usage: "commands for datetimes",
 			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
@@ -129,7 +129,7 @@ var cmdSyntax = &cli.Command{
 		},
 		&cli.Command{
 			Name:  "language",
-			Usage: "sub-commands for language code syntax",
+			Usage: "commands for language code syntax",
 			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",

@@ -15,7 +15,7 @@ import (
 
 var cmdRelay = &cli.Command{
 	Name:  "relay",
-	Usage: "sub-commands for relays",
+	Usage: "commands for querying and administering relays",
 	Flags: []cli.Flag{
 		&cli.StringFlag{
 			Name:    "relay-host",
@@ -27,7 +27,7 @@ var cmdRelay = &cli.Command{
 	Commands: []*cli.Command{
 		&cli.Command{
 			Name:  "account",
-			Usage: "sub-commands for accounts/repos on relay",
+			Usage: "commands for accounts/repos on relay",
 			Commands: []*cli.Command{
 				&cli.Command{
 					Name:    "list",
@@ -62,7 +62,7 @@ var cmdRelay = &cli.Command{
 		},
 		&cli.Command{
 			Name:  "host",
-			Usage: "sub-commands for upstream hosts (eg, PDS)",
+			Usage: "commands for upstream hosts (eg, PDS)",
 			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "request-crawl",

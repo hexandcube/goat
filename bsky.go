@@ -14,12 +14,12 @@ import (
 
 var cmdBsky = &cli.Command{
 	Name:  "bsky",
-	Usage: "sub-commands for bsky app",
+	Usage: "commands for bluesky social app (eg, posting)",
 	Flags: []cli.Flag{},
 	Commands: []*cli.Command{
 		&cli.Command{
 			Name:      "post",
-			Usage:     "create a post",
+			Usage:     "create a bluesky post",
 			ArgsUsage: `<text>`,
 			Action:    runBskyPost,
 		},

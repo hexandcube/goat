@@ -16,7 +16,7 @@ import (
 
 var cmdRelayAdmin = &cli.Command{
 	Name:  "admin",
-	Usage: "sub-comands for relay administration",
+	Usage: "comands for relay administration",
 	Flags: []cli.Flag{
 		&cli.StringFlag{
 			Name:    "admin-password",
@@ -32,7 +32,7 @@ var cmdRelayAdmin = &cli.Command{
 	Commands: []*cli.Command{
 		&cli.Command{
 			Name:  "account",
-			Usage: "sub-commands for managing accounts",
+			Usage: "commands for managing accounts",
 			Commands: []*cli.Command{
 				&cli.Command{
 					Name:  "takedown",
@@ -60,7 +60,7 @@ var cmdRelayAdmin = &cli.Command{
 		},
 		&cli.Command{
 			Name:  "host",
-			Usage: "sub-commands for upstream hosts (eg, PDS)",
+			Usage: "commands for upstream hosts (eg, PDS)",
 			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "add",
@@ -101,7 +101,7 @@ var cmdRelayAdmin = &cli.Command{
 		},
 		&cli.Command{
 			Name:  "domain",
-			Usage: "sub-commands for domain-level config",
+			Usage: "commands for domain-level config",
 			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "ban",
@@ -125,7 +125,7 @@ var cmdRelayAdmin = &cli.Command{
 		},
 		&cli.Command{
 			Name:  "consumer",
-			Usage: "sub-commands for consumers",
+			Usage: "commands for consumers",
 			Commands: []*cli.Command{
 				&cli.Command{
 					Name:    "list",

@@ -23,7 +23,7 @@ import (
 
 var cmdRepo = &cli.Command{
 	Name:  "repo",
-	Usage: "sub-commands for repositories",
+	Usage: "commands for public atproto data repositories",
 	Flags: []cli.Flag{},
 	Commands: []*cli.Command{
 		&cli.Command{

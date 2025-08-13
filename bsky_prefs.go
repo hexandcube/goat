@@ -13,7 +13,7 @@ import (
 
 var cmdBskyPrefs = &cli.Command{
 	Name:  "prefs",
-	Usage: "sub-commands for preferences",
+	Usage: "commands for app preferences",
 	Flags: []cli.Flag{},
 	Commands: []*cli.Command{
 		&cli.Command{

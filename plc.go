@@ -22,7 +22,7 @@ import (
 
 var cmdPLC = &cli.Command{
 	Name:  "plc",
-	Usage: "sub-commands for DID PLCs",
+	Usage: "commands for PLC identities (DIDs) and directory interactions (see also 'account plc')",
 	Flags: []cli.Flag{
 		&cli.StringFlag{
 			Name:    "plc-host",
