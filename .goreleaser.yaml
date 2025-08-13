@@ -17,6 +17,19 @@ builds:
       - amd64
       - arm64
 
+nfpms:
+  - id: default
+    package_name: goat
+    formats:
+      - deb
+    description: "Go AT protocol CLI tool"
+    vendor: "Bluesky Social"
+    maintainer: "bryan newbold <bnewbold@robocracy.org>"
+    homepage: "https://github.com/bluesky-social/goat"
+    license: "MIT"
+    section: "default"
+    priority: "extra"
+
 archives:
   - formats: [tar.gz]
     # this name template makes the OS and Arch compatible with the results of `uname`.
