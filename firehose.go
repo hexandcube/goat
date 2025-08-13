@@ -374,7 +374,7 @@ func (gfc *GoatFirehoseConsumer) handleCommitEvent(ctx context.Context, evt *com
 					break
 				}
 			}
-			if keep == true {
+			if keep {
 				break
 			}
 		}
@@ -427,7 +427,7 @@ func (gfc *GoatFirehoseConsumer) handleCommitEventOps(ctx context.Context, evt *
 					break
 				}
 			}
-			if keep == false {
+			if !keep {
 				continue
 			}
 		}

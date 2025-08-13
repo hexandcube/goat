@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	comatproto "github.com/bluesky-social/indigo/api/atproto"
@@ -55,7 +54,7 @@ func loadAuthClient(ctx context.Context) (*xrpc.Client, error) {
 		return nil, ErrNoAuthSession
 	}
 
-	fBytes, err := ioutil.ReadFile(fPath)
+	fBytes, err := os.ReadFile(fPath)
 	if err != nil {
 		return nil, err
 	}

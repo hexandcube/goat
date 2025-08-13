@@ -423,7 +423,7 @@ func runRelayHostDiff(ctx context.Context, cmd *cli.Command) error {
 	}
 
 	names := []string{}
-	for k, _ := range allHosts {
+	for k := range allHosts {
 		names = append(names, k)
 	}
 	sort.Strings(names)
