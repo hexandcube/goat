@@ -23,7 +23,7 @@ import (
 	lexutil "github.com/bluesky-social/indigo/lex/util"
 
 	"github.com/gorilla/websocket"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 var cmdFirehose = &cli.Command{
@@ -34,7 +34,7 @@ var cmdFirehose = &cli.Command{
 			Name:    "relay-host",
 			Usage:   "method, hostname, and port of Relay instance (websocket)",
 			Value:   "wss://bsky.network",
-			EnvVars: []string{"ATP_RELAY_HOST", "RELAY_HOST"},
+			Sources: cli.EnvVars("ATP_RELAY_HOST", "RELAY_HOST"),
 		},
 		&cli.IntFlag{
 			Name:  "cursor",
@@ -93,10 +93,9 @@ type GoatFirehoseConsumer struct {
 	Dir identity.Directory
 }
 
-func runFirehose(cctx *cli.Context) error {
-	ctx := context.Background()
+func runFirehose(ctx context.Context, cmd *cli.Command) error {
 
-	slog.SetDefault(configLogger(cctx, os.Stderr))
+	slog.SetDefault(configLogger(cmd, os.Stderr))
 
 	// main thing is skipping handle verification
 	bdir := identity.BaseDirectory{
@@ -108,30 +107,30 @@ func runFirehose(cctx *cli.Context) error {
 	cdir := identity.NewCacheDirectory(&bdir, 1_000_000, time.Hour*24, time.Minute*2, time.Minute*5)
 
 	gfc := GoatFirehoseConsumer{
-		OpsMode:          cctx.Bool("ops"),
-		AccountsOnly:     cctx.Bool("account-events"),
-		CollectionFilter: cctx.StringSlice("collection"),
-		Quiet:            cctx.Bool("quiet"),
-		Blocks:           cctx.Bool("blocks"),
-		VerifyBasic:      cctx.Bool("verify-basic"),
-		VerifySig:        cctx.Bool("verify-sig"),
-		VerifyMST:        cctx.Bool("verify-mst"),
+		OpsMode:          cmd.Bool("ops"),
+		AccountsOnly:     cmd.Bool("account-events"),
+		CollectionFilter: cmd.StringSlice("collection"),
+		Quiet:            cmd.Bool("quiet"),
+		Blocks:           cmd.Bool("blocks"),
+		VerifyBasic:      cmd.Bool("verify-basic"),
+		VerifySig:        cmd.Bool("verify-sig"),
+		VerifyMST:        cmd.Bool("verify-mst"),
 		Dir:              &cdir,
 	}
 
 	var relayHost string
-	if cctx.IsSet("relay-host") {
-		if cctx.Args().Len() != 0 {
+	if cmd.IsSet("relay-host") {
+		if cmd.Args().Len() != 0 {
 			return errors.New("error: unused positional args")
 		}
-		relayHost = cctx.String("relay-host")
+		relayHost = cmd.String("relay-host")
 	} else {
-		if cctx.Args().Len() == 1 {
-			relayHost = cctx.Args().First()
-		} else if cctx.Args().Len() > 1 {
+		if cmd.Args().Len() == 1 {
+			relayHost = cmd.Args().First()
+		} else if cmd.Args().Len() > 1 {
 			return errors.New("can only have at most one relay-host")
 		} else {
-			relayHost = cctx.String("relay-host")
+			relayHost = cmd.String("relay-host")
 		}
 	}
 
@@ -147,8 +146,8 @@ func runFirehose(cctx *cli.Context) error {
 		u.Scheme = "wss"
 	}
 	u.Path = "xrpc/com.atproto.sync.subscribeRepos"
-	if cctx.IsSet("cursor") {
-		u.RawQuery = fmt.Sprintf("cursor=%d", cctx.Int("cursor"))
+	if cmd.IsSet("cursor") {
+		u.RawQuery = fmt.Sprintf("cursor=%d", cmd.Int("cursor"))
 	}
 	urlString := u.String()
 	con, _, err := dialer.Dial(urlString, http.Header{

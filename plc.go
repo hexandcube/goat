@@ -17,7 +17,7 @@ import (
 
 	"github.com/did-method-plc/go-didplc"
 
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 var cmdPLC = &cli.Command{
@@ -28,10 +28,10 @@ var cmdPLC = &cli.Command{
 			Name:    "plc-host",
 			Usage:   "method, hostname, and port of PLC registry",
 			Value:   "https://plc.directory",
-			EnvVars: []string{"ATP_PLC_HOST"},
+			Sources: cli.EnvVars("ATP_PLC_HOST"),
 		},
 	},
-	Subcommands: []*cli.Command{
+	Commands: []*cli.Command{
 		&cli.Command{
 			Name:      "history",
 			Usage:     "fetch operation log for individual DID",
@@ -113,7 +113,7 @@ var cmdPLC = &cli.Command{
 				&cli.StringFlag{
 					Name:    "plc-signing-key",
 					Usage:   "private key used to sign operation (multibase syntax)",
-					EnvVars: []string{"PLC_SIGNING_KEY"},
+					Sources: cli.EnvVars("PLC_SIGNING_KEY"),
 				},
 			},
 			Action: runPLCSign,
@@ -169,10 +169,9 @@ var cmdPLC = &cli.Command{
 	},
 }
 
-func runPLCHistory(cctx *cli.Context) error {
-	ctx := context.Background()
-	plcHost := cctx.String("plc-host")
-	s := cctx.Args().First()
+func runPLCHistory(ctx context.Context, cmd *cli.Command) error {
+	plcHost := cmd.String("plc-host")
+	s := cmd.Args().First()
 	if s == "" {
 		return fmt.Errorf("need to provide account identifier as an argument")
 	}
@@ -238,10 +237,9 @@ func runPLCHistory(cctx *cli.Context) error {
 	return nil
 }
 
-func runPLCData(cctx *cli.Context) error {
-	ctx := context.Background()
-	plcHost := cctx.String("plc-host")
-	s := cctx.Args().First()
+func runPLCData(ctx context.Context, cmd *cli.Command) error {
+	plcHost := cmd.String("plc-host")
+	s := cmd.Args().First()
 	if s == "" {
 		return fmt.Errorf("need to provide account identifier as an argument")
 	}
@@ -288,15 +286,14 @@ func runPLCData(cctx *cli.Context) error {
 	return nil
 }
 
-func runPLCDump(cctx *cli.Context) error {
-	ctx := context.Background()
-	plcHost := cctx.String("plc-host")
+func runPLCDump(ctx context.Context, cmd *cli.Command) error {
+	plcHost := cmd.String("plc-host")
 	client := util.RobustHTTPClient()
-	size := cctx.Int("batch-size")
-	tailMode := cctx.Bool("tail")
-	interval := cctx.Duration("interval")
+	size := cmd.Int("batch-size")
+	tailMode := cmd.Bool("tail")
+	interval := cmd.Duration("interval")
 
-	cursor := cctx.String("cursor")
+	cursor := cmd.String("cursor")
 	if cursor == "now" {
 		cursor = syntax.DatetimeNow().String()
 	}
@@ -416,7 +413,7 @@ func fetchPLCData(ctx context.Context, plcHost string, did syntax.DID) (*PLCData
 	return &d, nil
 }
 
-func runPLCGenesis(cctx *cli.Context) error {
+func runPLCGenesis(ctx context.Context, cmd *cli.Command) error {
 	// TODO: helper function in didplc to make an empty op like this?
 	services := make(map[string]didplc.OpService)
 	verifMethods := make(map[string]string)
@@ -428,14 +425,14 @@ func runPLCGenesis(cctx *cli.Context) error {
 		Services:            services,
 	}
 
-	for _, rotationKey := range cctx.StringSlice("rotation-key") {
+	for _, rotationKey := range cmd.StringSlice("rotation-key") {
 		if _, err := crypto.ParsePublicDIDKey(rotationKey); err != nil {
 			return err
 		}
 		op.RotationKeys = append(op.RotationKeys, rotationKey)
 	}
 
-	handle := cctx.String("handle")
+	handle := cmd.String("handle")
 	if handle != "" {
 		parsedHandle, err := syntax.ParseHandle(strings.TrimPrefix(handle, "at://"))
 		if err != nil {
@@ -445,7 +442,7 @@ func runPLCGenesis(cctx *cli.Context) error {
 		op.AlsoKnownAs = append(op.AlsoKnownAs, "at://"+string(parsedHandle))
 	}
 
-	atprotoKey := cctx.String("atproto-key")
+	atprotoKey := cmd.String("atproto-key")
 	if atprotoKey != "" {
 		if _, err := crypto.ParsePublicDIDKey(atprotoKey); err != nil {
 			return err
@@ -453,7 +450,7 @@ func runPLCGenesis(cctx *cli.Context) error {
 		op.VerificationMethods["atproto"] = atprotoKey
 	}
 
-	pds := cctx.String("pds")
+	pds := cmd.String("pds")
 	if pds != "" {
 		parsedUrl, err := url.Parse(pds)
 		if err != nil {
@@ -477,8 +474,8 @@ func runPLCGenesis(cctx *cli.Context) error {
 	return nil
 }
 
-func runPLCCalcDID(cctx *cli.Context) error {
-	s := cctx.Args().First()
+func runPLCCalcDID(ctx context.Context, cmd *cli.Command) error {
+	s := cmd.Args().First()
 	if s == "" {
 		return fmt.Errorf("need to provide genesis json path as input")
 	}
@@ -509,13 +506,13 @@ func runPLCCalcDID(cctx *cli.Context) error {
 	return nil
 }
 
-func runPLCSign(cctx *cli.Context) error {
-	s := cctx.Args().First()
+func runPLCSign(ctx context.Context, cmd *cli.Command) error {
+	s := cmd.Args().First()
 	if s == "" {
 		return fmt.Errorf("need to provide PLC operation json path as input")
 	}
 
-	privStr := cctx.String("plc-signing-key")
+	privStr := cmd.String("plc-signing-key")
 	if privStr == "" {
 		return fmt.Errorf("private key must be provided (HINT: use `goat account plc` if your PDS holds the keys)")
 	}
@@ -557,10 +554,9 @@ func runPLCSign(cctx *cli.Context) error {
 	return nil
 }
 
-func runPLCSubmit(cctx *cli.Context) error {
-	ctx := context.Background()
-	expectGenesis := cctx.Bool("genesis")
-	didString := cctx.String("did")
+func runPLCSubmit(ctx context.Context, cmd *cli.Command) error {
+	expectGenesis := cmd.Bool("genesis")
+	didString := cmd.String("did")
 
 	if !expectGenesis && didString == "" {
 		return fmt.Errorf("exactly one of either --genesis or --did must be specified")
@@ -570,7 +566,7 @@ func runPLCSubmit(cctx *cli.Context) error {
 		return fmt.Errorf("exactly one of either --genesis or --did must be specified")
 	}
 
-	s := cctx.Args().First()
+	s := cmd.Args().First()
 	if s == "" {
 		return fmt.Errorf("need to provide PLC operation json path as input")
 	}
@@ -611,7 +607,7 @@ func runPLCSubmit(cctx *cli.Context) error {
 	}
 
 	c := didplc.Client{
-		DirectoryURL: cctx.String("plc-host"),
+		DirectoryURL: cmd.String("plc-host"),
 		UserAgent:    *userAgent(),
 	}
 
@@ -669,17 +665,16 @@ func fetchOpForUpdate(ctx context.Context, c didplc.Client, did string, base_cid
 	return &op, nil
 }
 
-func runPLCUpdate(cctx *cli.Context) error {
-	ctx := context.Background()
-	prevCID := cctx.String("prev")
+func runPLCUpdate(ctx context.Context, cmd *cli.Command) error {
+	prevCID := cmd.String("prev")
 
-	didString := cctx.Args().First()
+	didString := cmd.Args().First()
 	if didString == "" {
 		return fmt.Errorf("please specify a DID to update")
 	}
 
 	c := didplc.Client{
-		DirectoryURL: cctx.String("plc-host"),
+		DirectoryURL: cmd.String("plc-host"),
 		UserAgent:    *userAgent(),
 	}
 	op, err := fetchOpForUpdate(ctx, c, didString, prevCID)
@@ -687,7 +682,7 @@ func runPLCUpdate(cctx *cli.Context) error {
 		return err
 	}
 
-	for _, rotationKey := range cctx.StringSlice("remove-rotation-key") {
+	for _, rotationKey := range cmd.StringSlice("remove-rotation-key") {
 		if _, err := crypto.ParsePublicDIDKey(rotationKey); err != nil {
 			return err
 		}
@@ -703,7 +698,7 @@ func runPLCUpdate(cctx *cli.Context) error {
 		}
 	}
 
-	for _, rotationKey := range cctx.StringSlice("add-rotation-key") {
+	for _, rotationKey := range cmd.StringSlice("add-rotation-key") {
 		if _, err := crypto.ParsePublicDIDKey(rotationKey); err != nil {
 			return err
 		}
@@ -711,7 +706,7 @@ func runPLCUpdate(cctx *cli.Context) error {
 		op.RotationKeys = append([]string{rotationKey}, op.RotationKeys...)
 	}
 
-	handle := cctx.String("handle")
+	handle := cmd.String("handle")
 	if handle != "" {
 		parsedHandle, err := syntax.ParseHandle(strings.TrimPrefix(handle, "at://"))
 		if err != nil {
@@ -730,7 +725,7 @@ func runPLCUpdate(cctx *cli.Context) error {
 		op.AlsoKnownAs = append(akas, "at://"+string(parsedHandle))
 	}
 
-	atprotoKey := cctx.String("atproto-key")
+	atprotoKey := cmd.String("atproto-key")
 	if atprotoKey != "" {
 		if _, err := crypto.ParsePublicDIDKey(atprotoKey); err != nil {
 			return err
@@ -738,7 +733,7 @@ func runPLCUpdate(cctx *cli.Context) error {
 		op.VerificationMethods["atproto"] = atprotoKey
 	}
 
-	pds := cctx.String("pds")
+	pds := cmd.String("pds")
 	if pds != "" {
 		parsedUrl, err := url.Parse(pds)
 		if err != nil {

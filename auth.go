@@ -48,7 +48,7 @@ func persistAuthSession(sess *AuthSession) error {
 
 func loadAuthClient(ctx context.Context) (*xrpc.Client, error) {
 
-	// TODO: could also load from env var / cctx
+	// TODO: could also load from env var / cmd
 
 	fPath, err := xdg.SearchStateFile("goat/auth-session.json")
 	if err != nil {

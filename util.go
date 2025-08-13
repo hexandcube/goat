@@ -12,7 +12,7 @@ import (
 	"github.com/bluesky-social/indigo/atproto/syntax"
 
 	"github.com/earthboundkid/versioninfo/v2"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func resolveIdent(ctx context.Context, arg string) (*identity.Identity, error) {
@@ -49,9 +49,9 @@ func getFileOrStdout(path string) (io.WriteCloser, error) {
 	return file, nil
 }
 
-func configLogger(cctx *cli.Context, writer io.Writer) *slog.Logger {
+func configLogger(cmd *cli.Command, writer io.Writer) *slog.Logger {
 	var level slog.Level
-	switch strings.ToLower(cctx.String("log-level")) {
+	switch strings.ToLower(cmd.String("log-level")) {
 	case "error":
 		level = slog.LevelError
 	case "warn":

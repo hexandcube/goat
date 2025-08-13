@@ -1,13 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 
 	_ "github.com/joho/godotenv/autoload"
 
 	"github.com/earthboundkid/versioninfo/v2"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func main() {
@@ -19,7 +20,7 @@ func main() {
 
 func run(args []string) error {
 
-	app := cli.App{
+	app := cli.Command{
 		Name:    "goat",
 		Usage:   "Go AT protocol CLI tool",
 		Version: versioninfo.Short(),
@@ -27,7 +28,7 @@ func run(args []string) error {
 			&cli.StringFlag{
 				Name:    "log-level",
 				Usage:   "log verbosity level (eg: warn, info, debug)",
-				EnvVars: []string{"GOAT_LOG_LEVEL", "GO_LOG_LEVEL", "LOG_LEVEL"},
+				Sources: cli.EnvVars("GOAT_LOG_LEVEL", "GO_LOG_LEVEL", "LOG_LEVEL"),
 			},
 		},
 	}
@@ -48,5 +49,5 @@ func run(args []string) error {
 		cmdPds,
 		cmdRelay,
 	}
-	return app.Run(args)
+	return app.Run(context.Background(), args)
 }

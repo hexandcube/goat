@@ -10,7 +10,7 @@ import (
 	"github.com/bluesky-social/indigo/atproto/syntax"
 	"github.com/bluesky-social/indigo/xrpc"
 
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 var cmdRelay = &cli.Command{
@@ -21,14 +21,14 @@ var cmdRelay = &cli.Command{
 			Name:    "relay-host",
 			Usage:   "method, hostname, and port of Relay instance",
 			Value:   "https://bsky.network",
-			EnvVars: []string{"ATP_RELAY_HOST", "RELAY_HOST"},
+			Sources: cli.EnvVars("ATP_RELAY_HOST", "RELAY_HOST"),
 		},
 	},
-	Subcommands: []*cli.Command{
+	Commands: []*cli.Command{
 		&cli.Command{
 			Name:  "account",
 			Usage: "sub-commands for accounts/repos on relay",
-			Subcommands: []*cli.Command{
+			Commands: []*cli.Command{
 				&cli.Command{
 					Name:    "list",
 					Aliases: []string{"ls"},
@@ -63,7 +63,7 @@ var cmdRelay = &cli.Command{
 		&cli.Command{
 			Name:  "host",
 			Usage: "sub-commands for upstream hosts (eg, PDS)",
-			Subcommands: []*cli.Command{
+			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "request-crawl",
 					Aliases:   []string{"add"},
@@ -118,19 +118,18 @@ var cmdRelay = &cli.Command{
 	},
 }
 
-func runRelayAccountList(cctx *cli.Context) error {
-	ctx := cctx.Context
+func runRelayAccountList(ctx context.Context, cmd *cli.Command) error {
 
-	if cctx.Args().Len() > 0 {
+	if cmd.Args().Len() > 0 {
 		return fmt.Errorf("unexpected arguments")
 	}
 
 	client := xrpc.Client{
-		Host:      cctx.String("relay-host"),
+		Host:      cmd.String("relay-host"),
 		UserAgent: userAgent(),
 	}
 
-	collection := cctx.String("collection")
+	collection := cmd.String("collection")
 	cursor := ""
 	var size int64 = 500
 	for {
@@ -154,7 +153,7 @@ func runRelayAccountList(cctx *cli.Context) error {
 			}
 
 			for _, r := range resp.Repos {
-				if cctx.Bool("json") {
+				if cmd.Bool("json") {
 					b, err := json.Marshal(r)
 					if err != nil {
 						return err
@@ -180,14 +179,13 @@ func runRelayAccountList(cctx *cli.Context) error {
 	return nil
 }
 
-func runRelayAccountStatus(cctx *cli.Context) error {
-	ctx := cctx.Context
+func runRelayAccountStatus(ctx context.Context, cmd *cli.Command) error {
 
-	didStr := cctx.Args().First()
+	didStr := cmd.Args().First()
 	if didStr == "" {
 		return fmt.Errorf("need to provide account DID as argument")
 	}
-	if cctx.Args().Len() != 1 {
+	if cmd.Args().Len() != 1 {
 		return fmt.Errorf("unexpected arguments")
 	}
 
@@ -197,7 +195,7 @@ func runRelayAccountStatus(cctx *cli.Context) error {
 	}
 
 	client := xrpc.Client{
-		Host:      cctx.String("relay-host"),
+		Host:      cmd.String("relay-host"),
 		UserAgent: userAgent(),
 	}
 
@@ -206,7 +204,7 @@ func runRelayAccountStatus(cctx *cli.Context) error {
 		return err
 	}
 
-	if cctx.Bool("json") {
+	if cmd.Bool("json") {
 		b, err := json.Marshal(r)
 		if err != nil {
 			return err
@@ -229,19 +227,18 @@ func runRelayAccountStatus(cctx *cli.Context) error {
 	return nil
 }
 
-func runRelayHostRequestCrawl(cctx *cli.Context) error {
-	ctx := cctx.Context
+func runRelayHostRequestCrawl(ctx context.Context, cmd *cli.Command) error {
 
-	hostname := cctx.Args().First()
+	hostname := cmd.Args().First()
 	if hostname == "" {
 		return fmt.Errorf("need to provide hostname as argument")
 	}
-	if cctx.Args().Len() != 1 {
+	if cmd.Args().Len() != 1 {
 		return fmt.Errorf("unexpected arguments")
 	}
 
 	client := xrpc.Client{
-		Host:      cctx.String("relay-host"),
+		Host:      cmd.String("relay-host"),
 		UserAgent: userAgent(),
 	}
 
@@ -253,15 +250,14 @@ func runRelayHostRequestCrawl(cctx *cli.Context) error {
 	return nil
 }
 
-func runRelayHostList(cctx *cli.Context) error {
-	ctx := cctx.Context
+func runRelayHostList(ctx context.Context, cmd *cli.Command) error {
 
-	if cctx.Args().Len() > 0 {
+	if cmd.Args().Len() > 0 {
 		return fmt.Errorf("unexpected arguments")
 	}
 
 	client := xrpc.Client{
-		Host:      cctx.String("relay-host"),
+		Host:      cmd.String("relay-host"),
 		UserAgent: userAgent(),
 	}
 
@@ -274,7 +270,7 @@ func runRelayHostList(cctx *cli.Context) error {
 		}
 
 		for _, h := range resp.Hosts {
-			if cctx.Bool("json") {
+			if cmd.Bool("json") {
 				b, err := json.Marshal(h)
 				if err != nil {
 					return err
@@ -305,19 +301,18 @@ func runRelayHostList(cctx *cli.Context) error {
 	return nil
 }
 
-func runRelayHostStatus(cctx *cli.Context) error {
-	ctx := cctx.Context
+func runRelayHostStatus(ctx context.Context, cmd *cli.Command) error {
 
-	hostname := cctx.Args().First()
+	hostname := cmd.Args().First()
 	if hostname == "" {
 		return fmt.Errorf("need to provide hostname as argument")
 	}
-	if cctx.Args().Len() != 1 {
+	if cmd.Args().Len() != 1 {
 		return fmt.Errorf("unexpected arguments")
 	}
 
 	client := xrpc.Client{
-		Host:      cctx.String("relay-host"),
+		Host:      cmd.String("relay-host"),
 		UserAgent: userAgent(),
 	}
 
@@ -326,7 +321,7 @@ func runRelayHostStatus(cctx *cli.Context) error {
 		return err
 	}
 
-	if cctx.Bool("json") {
+	if cmd.Bool("json") {
 		b, err := json.Marshal(h)
 		if err != nil {
 			return err
@@ -395,17 +390,16 @@ func fetchHosts(ctx context.Context, relayHost string) ([]hostInfo, error) {
 	return hosts, nil
 }
 
-func runRelayHostDiff(cctx *cli.Context) error {
-	ctx := cctx.Context
-	verbose := cctx.Bool("verbose")
-	seqSlop := cctx.Int64("seq-slop")
+func runRelayHostDiff(ctx context.Context, cmd *cli.Command) error {
+	verbose := cmd.Bool("verbose")
+	seqSlop := cmd.Int64("seq-slop")
 
-	if cctx.Args().Len() != 2 {
+	if cmd.Args().Len() != 2 {
 		return fmt.Errorf("expected two relay URLs are args")
 	}
 
-	urlOne := cctx.Args().Get(0)
-	urlTwo := cctx.Args().Get(1)
+	urlOne := cmd.Args().Get(0)
+	urlTwo := cmd.Args().Get(1)
 
 	listOne, err := fetchHosts(ctx, urlOne)
 	if err != nil {

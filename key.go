@@ -1,17 +1,18 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/bluesky-social/indigo/atproto/crypto"
 
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 var cmdKey = &cli.Command{
 	Name:  "key",
 	Usage: "sub-commands for cryptographic keys",
-	Subcommands: []*cli.Command{
+	Commands: []*cli.Command{
 		&cli.Command{
 			Name:  "generate",
 			Usage: "outputs a new secret key",
@@ -37,10 +38,10 @@ var cmdKey = &cli.Command{
 	},
 }
 
-func runKeyGenerate(cctx *cli.Context) error {
+func runKeyGenerate(ctx context.Context, cmd *cli.Command) error {
 	var priv crypto.PrivateKey
 	var privMultibase string
-	switch cctx.String("type") {
+	switch cmd.String("type") {
 	case "", "P-256", "p256", "ES256", "secp256r1":
 		sec, err := crypto.GeneratePrivateKeyP256()
 		if err != nil {
@@ -56,9 +57,9 @@ func runKeyGenerate(cctx *cli.Context) error {
 		privMultibase = sec.Multibase()
 		priv = sec
 	default:
-		return fmt.Errorf("unknown key type: %s", cctx.String("type"))
+		return fmt.Errorf("unknown key type: %s", cmd.String("type"))
 	}
-	if cctx.Bool("terse") {
+	if cmd.Bool("terse") {
 		fmt.Println(privMultibase)
 		return nil
 	}
@@ -87,8 +88,8 @@ func descKeyType(val interface{}) string {
 	}
 }
 
-func runKeyInspect(cctx *cli.Context) error {
-	s := cctx.Args().First()
+func runKeyInspect(ctx context.Context, cmd *cli.Command) error {
+	s := cmd.Args().First()
 	if s == "" {
 		return fmt.Errorf("need to provide key as an argument")
 	}
