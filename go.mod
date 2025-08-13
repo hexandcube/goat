@@ -7,8 +7,8 @@ toolchain go1.24.1
 require (
 	github.com/adrg/xdg v0.5.3
 	github.com/bluesky-social/indigo v0.0.0-20250813002524-42e2d5b7f598
-	github.com/carlmjohnson/versioninfo v0.22.5
 	github.com/did-method-plc/go-didplc v0.0.0-20250730112407-6d84973a989b
+	github.com/earthboundkid/versioninfo/v2 v2.24.1
 	github.com/gorilla/websocket v1.5.3
 	github.com/ipfs/go-cid v0.5.0
 	github.com/ipfs/go-ipld-cbor v0.2.1
@@ -21,6 +21,7 @@ require (
 require (
 	github.com/RussellLuo/slidingwindow v0.0.0-20200528002341-535bb99d338b // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/carlmjohnson/versioninfo v0.22.5 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.7 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect

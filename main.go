@@ -6,7 +6,7 @@ import (
 
 	_ "github.com/joho/godotenv/autoload"
 
-	"github.com/carlmjohnson/versioninfo"
+	"github.com/earthboundkid/versioninfo/v2"
 	"github.com/urfave/cli/v2"
 )
 
