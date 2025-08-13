@@ -17,8 +17,9 @@ var cmdResolve = &cli.Command{
 	ArgsUsage: `<at-identifier>`,
 	Flags: []cli.Flag{
 		&cli.BoolFlag{
-			Name:  "did",
-			Usage: "just resolve to DID",
+			Name:    "did",
+			Aliases: []string{"d"},
+			Usage:   "just resolve to DID",
 		},
 	},
 	Action: runResolve,
