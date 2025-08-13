@@ -18,14 +18,14 @@ import (
 	"github.com/bluesky-social/indigo/xrpc"
 
 	"github.com/ipfs/go-cid"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 var cmdRepo = &cli.Command{
 	Name:  "repo",
 	Usage: "sub-commands for repositories",
 	Flags: []cli.Flag{},
-	Subcommands: []*cli.Command{
+	Commands: []*cli.Command{
 		&cli.Command{
 			Name:      "export",
 			Usage:     "download CAR file for given account",
@@ -94,9 +94,8 @@ var cmdRepo = &cli.Command{
 	},
 }
 
-func runRepoExport(cctx *cli.Context) error {
-	ctx := context.Background()
-	username := cctx.Args().First()
+func runRepoExport(ctx context.Context, cmd *cli.Command) error {
+	username := cmd.Args().First()
 	if username == "" {
 		return fmt.Errorf("need to provide username as an argument")
 	}
@@ -118,7 +117,7 @@ func runRepoExport(cctx *cli.Context) error {
 	xrpcc.Client = util.RobustHTTPClient()
 	xrpcc.Client.Timeout = 600 * time.Second
 
-	carPath := cctx.String("output")
+	carPath := cmd.String("output")
 	if carPath == "" {
 		// NOTE: having the rev in the the path might be nice
 		now := time.Now().Format("20060102150405")
@@ -145,10 +144,9 @@ func runRepoExport(cctx *cli.Context) error {
 	return nil
 }
 
-func runRepoImport(cctx *cli.Context) error {
-	ctx := context.Background()
+func runRepoImport(ctx context.Context, cmd *cli.Command) error {
 
-	carPath := cctx.Args().First()
+	carPath := cmd.Args().First()
 	if carPath == "" {
 		return fmt.Errorf("need to provide CAR file path as an argument")
 	}
@@ -173,9 +171,8 @@ func runRepoImport(cctx *cli.Context) error {
 	return nil
 }
 
-func runRepoList(cctx *cli.Context) error {
-	ctx := context.Background()
-	carPath := cctx.Args().First()
+func runRepoList(ctx context.Context, cmd *cli.Command) error {
+	carPath := cmd.Args().First()
 	if carPath == "" {
 		return fmt.Errorf("need to provide path to CAR file as argument")
 	}
@@ -200,9 +197,8 @@ func runRepoList(cctx *cli.Context) error {
 	return nil
 }
 
-func runRepoInspect(cctx *cli.Context) error {
-	ctx := context.Background()
-	carPath := cctx.Args().First()
+func runRepoInspect(ctx context.Context, cmd *cli.Command) error {
+	carPath := cmd.Args().First()
 	if carPath == "" {
 		return fmt.Errorf("need to provide path to CAR file as argument")
 	}
@@ -227,12 +223,11 @@ func runRepoInspect(cctx *cli.Context) error {
 	return nil
 }
 
-func runRepoMST(cctx *cli.Context) error {
-	ctx := context.Background()
+func runRepoMST(ctx context.Context, cmd *cli.Command) error {
 	opts := repoMSTOptions{
-		carPath: cctx.Args().First(),
-		fullCID: cctx.Bool("full-cid"),
-		root:    cctx.String("root"),
+		carPath: cmd.Args().First(),
+		fullCID: cmd.Bool("full-cid"),
+		root:    cmd.String("root"),
 	}
 	// read from file or stdin
 	if opts.carPath == "" {
@@ -245,9 +240,8 @@ func runRepoMST(cctx *cli.Context) error {
 	return prettyMST(ctx, inputCAR, opts)
 }
 
-func runRepoUnpack(cctx *cli.Context) error {
-	ctx := context.Background()
-	carPath := cctx.Args().First()
+func runRepoUnpack(ctx context.Context, cmd *cli.Command) error {
+	carPath := cmd.Args().First()
 	if carPath == "" {
 		return fmt.Errorf("need to provide path to CAR file as argument")
 	}
@@ -267,7 +261,7 @@ func runRepoUnpack(cctx *cli.Context) error {
 		return err
 	}
 
-	topDir := cctx.String("output")
+	topDir := cmd.String("output")
 	if topDir == "" {
 		topDir = did.String()
 	}

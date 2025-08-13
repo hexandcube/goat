@@ -1,22 +1,23 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"time"
 
 	"github.com/bluesky-social/indigo/atproto/syntax"
 
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 var cmdSyntax = &cli.Command{
 	Name:  "syntax",
 	Usage: "sub-commands for string syntax helpers",
-	Subcommands: []*cli.Command{
+	Commands: []*cli.Command{
 		&cli.Command{
 			Name:  "tid",
 			Usage: "sub-commands for TIDs",
-			Subcommands: []*cli.Command{
+			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
 					Usage:     "validates TID syntax",
@@ -40,7 +41,7 @@ var cmdSyntax = &cli.Command{
 		&cli.Command{
 			Name:  "handle",
 			Usage: "sub-commands for handle syntax",
-			Subcommands: []*cli.Command{
+			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
 					Usage:     "validates handle syntax",
@@ -52,7 +53,7 @@ var cmdSyntax = &cli.Command{
 		&cli.Command{
 			Name:  "did",
 			Usage: "sub-commands for DID syntax",
-			Subcommands: []*cli.Command{
+			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
 					Usage:     "validates DID syntax",
@@ -64,7 +65,7 @@ var cmdSyntax = &cli.Command{
 		&cli.Command{
 			Name:  "cid",
 			Usage: "sub-commands for CID syntax",
-			Subcommands: []*cli.Command{
+			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
 					Usage:     "validates CID syntax",
@@ -76,7 +77,7 @@ var cmdSyntax = &cli.Command{
 		&cli.Command{
 			Name:  "rkey",
 			Usage: "sub-commands for record key syntax",
-			Subcommands: []*cli.Command{
+			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
 					Usage:     "validates record key syntax",
@@ -88,7 +89,7 @@ var cmdSyntax = &cli.Command{
 		&cli.Command{
 			Name:  "nsid",
 			Usage: "sub-commands for NSID syntax",
-			Subcommands: []*cli.Command{
+			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
 					Usage:     "validates NSID syntax",
@@ -100,7 +101,7 @@ var cmdSyntax = &cli.Command{
 		&cli.Command{
 			Name:  "at-uri",
 			Usage: "sub-commands for AT-URI syntax",
-			Subcommands: []*cli.Command{
+			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
 					Usage:     "validates AT-URI syntax",
@@ -112,7 +113,7 @@ var cmdSyntax = &cli.Command{
 		&cli.Command{
 			Name:  "datetime",
 			Usage: "sub-commands for datetimes",
-			Subcommands: []*cli.Command{
+			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
 					Usage:     "validates datetime syntax",
@@ -129,7 +130,7 @@ var cmdSyntax = &cli.Command{
 		&cli.Command{
 			Name:  "language",
 			Usage: "sub-commands for language code syntax",
-			Subcommands: []*cli.Command{
+			Commands: []*cli.Command{
 				&cli.Command{
 					Name:      "check",
 					Usage:     "validates language code syntax",
@@ -141,8 +142,8 @@ var cmdSyntax = &cli.Command{
 	},
 }
 
-func runSyntaxTIDCheck(cctx *cli.Context) error {
-	s := cctx.Args().First()
+func runSyntaxTIDCheck(ctx context.Context, cmd *cli.Command) error {
+	s := cmd.Args().First()
 	if s == "" {
 		return fmt.Errorf("need to provide identifier as argument")
 	}
@@ -154,13 +155,13 @@ func runSyntaxTIDCheck(cctx *cli.Context) error {
 	return nil
 }
 
-func runSyntaxTIDGenerate(cctx *cli.Context) error {
+func runSyntaxTIDGenerate(ctx context.Context, cmd *cli.Command) error {
 	fmt.Printf("%s\n", syntax.NewTIDNow(0).String())
 	return nil
 }
 
-func runSyntaxTIDInspect(cctx *cli.Context) error {
-	s := cctx.Args().First()
+func runSyntaxTIDInspect(ctx context.Context, cmd *cli.Command) error {
+	s := cmd.Args().First()
 	if s == "" {
 		return fmt.Errorf("need to provide identifier as argument")
 	}
@@ -175,8 +176,8 @@ func runSyntaxTIDInspect(cctx *cli.Context) error {
 	return nil
 }
 
-func runSyntaxRecordKeyCheck(cctx *cli.Context) error {
-	s := cctx.Args().First()
+func runSyntaxRecordKeyCheck(ctx context.Context, cmd *cli.Command) error {
+	s := cmd.Args().First()
 	if s == "" {
 		return fmt.Errorf("need to provide identifier as argument")
 	}
@@ -188,8 +189,8 @@ func runSyntaxRecordKeyCheck(cctx *cli.Context) error {
 	return nil
 }
 
-func runSyntaxDIDCheck(cctx *cli.Context) error {
-	s := cctx.Args().First()
+func runSyntaxDIDCheck(ctx context.Context, cmd *cli.Command) error {
+	s := cmd.Args().First()
 	if s == "" {
 		return fmt.Errorf("need to provide identifier as argument")
 	}
@@ -201,8 +202,8 @@ func runSyntaxDIDCheck(cctx *cli.Context) error {
 	return nil
 }
 
-func runSyntaxCIDCheck(cctx *cli.Context) error {
-	s := cctx.Args().First()
+func runSyntaxCIDCheck(ctx context.Context, cmd *cli.Command) error {
+	s := cmd.Args().First()
 	if s == "" {
 		return fmt.Errorf("need to provide identifier as argument")
 	}
@@ -214,8 +215,8 @@ func runSyntaxCIDCheck(cctx *cli.Context) error {
 	return nil
 }
 
-func runSyntaxHandleCheck(cctx *cli.Context) error {
-	s := cctx.Args().First()
+func runSyntaxHandleCheck(ctx context.Context, cmd *cli.Command) error {
+	s := cmd.Args().First()
 	if s == "" {
 		return fmt.Errorf("need to provide identifier as argument")
 	}
@@ -227,8 +228,8 @@ func runSyntaxHandleCheck(cctx *cli.Context) error {
 	return nil
 }
 
-func runSyntaxNSIDCheck(cctx *cli.Context) error {
-	s := cctx.Args().First()
+func runSyntaxNSIDCheck(ctx context.Context, cmd *cli.Command) error {
+	s := cmd.Args().First()
 	if s == "" {
 		return fmt.Errorf("need to provide identifier as argument")
 	}
@@ -240,8 +241,8 @@ func runSyntaxNSIDCheck(cctx *cli.Context) error {
 	return nil
 }
 
-func runSyntaxATURICheck(cctx *cli.Context) error {
-	s := cctx.Args().First()
+func runSyntaxATURICheck(ctx context.Context, cmd *cli.Command) error {
+	s := cmd.Args().First()
 	if s == "" {
 		return fmt.Errorf("need to provide identifier as argument")
 	}
@@ -253,8 +254,8 @@ func runSyntaxATURICheck(cctx *cli.Context) error {
 	return nil
 }
 
-func runSyntaxDatetimeCheck(cctx *cli.Context) error {
-	s := cctx.Args().First()
+func runSyntaxDatetimeCheck(ctx context.Context, cmd *cli.Command) error {
+	s := cmd.Args().First()
 	if s == "" {
 		return fmt.Errorf("need to provide identifier as argument")
 	}
@@ -266,13 +267,13 @@ func runSyntaxDatetimeCheck(cctx *cli.Context) error {
 	return nil
 }
 
-func runSyntaxDatetimeNow(cctx *cli.Context) error {
+func runSyntaxDatetimeNow(ctx context.Context, cmd *cli.Command) error {
 	fmt.Printf("%s\n", syntax.DatetimeNow().String())
 	return nil
 }
 
-func runSyntaxLanguageCheck(cctx *cli.Context) error {
-	s := cctx.Args().First()
+func runSyntaxLanguageCheck(ctx context.Context, cmd *cli.Command) error {
+	s := cmd.Args().First()
 	if s == "" {
 		return fmt.Errorf("need to provide identifier as argument")
 	}

@@ -13,7 +13,7 @@ import (
 	"github.com/bluesky-social/indigo/atproto/syntax"
 	"github.com/did-method-plc/go-didplc"
 
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 var cmdAccountPlc = &cli.Command{
@@ -24,10 +24,10 @@ var cmdAccountPlc = &cli.Command{
 			Name:    "plc-host",
 			Usage:   "method, hostname, and port of PLC registry",
 			Value:   "https://plc.directory",
-			EnvVars: []string{"ATP_PLC_HOST"},
+			Sources: cli.EnvVars("ATP_PLC_HOST"),
 		},
 	},
-	Subcommands: []*cli.Command{
+	Commands: []*cli.Command{
 		&cli.Command{
 			Name:   "recommended",
 			Usage:  "list recommended DID fields for current account",
@@ -80,8 +80,7 @@ var cmdAccountPlc = &cli.Command{
 	},
 }
 
-func runAccountPlcRecommended(cctx *cli.Context) error {
-	ctx := context.Background()
+func runAccountPlcRecommended(ctx context.Context, cmd *cli.Command) error {
 
 	xrpcc, err := loadAuthClient(ctx)
 	if err == ErrNoAuthSession {
@@ -104,8 +103,7 @@ func runAccountPlcRecommended(cctx *cli.Context) error {
 	return nil
 }
 
-func runAccountPlcRequestToken(cctx *cli.Context) error {
-	ctx := context.Background()
+func runAccountPlcRequestToken(ctx context.Context, cmd *cli.Command) error {
 
 	xrpcc, err := loadAuthClient(ctx)
 	if err == ErrNoAuthSession {
@@ -123,10 +121,9 @@ func runAccountPlcRequestToken(cctx *cli.Context) error {
 	return nil
 }
 
-func runAccountPlcSign(cctx *cli.Context) error {
-	ctx := context.Background()
+func runAccountPlcSign(ctx context.Context, cmd *cli.Command) error {
 
-	opPath := cctx.Args().First()
+	opPath := cmd.Args().First()
 	if opPath == "" {
 		return fmt.Errorf("need to provide JSON file path as an argument")
 	}
@@ -148,7 +145,7 @@ func runAccountPlcSign(cctx *cli.Context) error {
 		return fmt.Errorf("failed decoding PLC op JSON: %w", err)
 	}
 
-	token := cctx.String("token")
+	token := cmd.String("token")
 	if token != "" {
 		body.Token = &token
 	}
@@ -167,10 +164,9 @@ func runAccountPlcSign(cctx *cli.Context) error {
 	return nil
 }
 
-func runAccountPlcSubmit(cctx *cli.Context) error {
-	ctx := context.Background()
+func runAccountPlcSubmit(ctx context.Context, cmd *cli.Command) error {
 
-	opPath := cctx.Args().First()
+	opPath := cmd.Args().First()
 	if opPath == "" {
 		return fmt.Errorf("need to provide JSON file path as an argument")
 	}
@@ -218,8 +214,7 @@ func runAccountPlcSubmit(cctx *cli.Context) error {
 	return nil
 }
 
-func runAccountPlcCurrent(cctx *cli.Context) error {
-	ctx := context.Background()
+func runAccountPlcCurrent(ctx context.Context, cmd *cli.Command) error {
 
 	xrpcc, err := loadAuthClient(ctx)
 	if err == ErrNoAuthSession || xrpcc.Auth == nil {
@@ -233,7 +228,7 @@ func runAccountPlcCurrent(cctx *cli.Context) error {
 		return err
 	}
 
-	plcData, err := fetchPLCData(ctx, cctx.String("plc-host"), did)
+	plcData, err := fetchPLCData(ctx, cmd.String("plc-host"), did)
 	if err != nil {
 		return err
 	}
@@ -246,10 +241,9 @@ func runAccountPlcCurrent(cctx *cli.Context) error {
 	return nil
 }
 
-func runAccountPlcAddRotationKey(cctx *cli.Context) error {
-	ctx := context.Background()
+func runAccountPlcAddRotationKey(ctx context.Context, cmd *cli.Command) error {
 
-	newKeyStr := cctx.Args().First()
+	newKeyStr := cmd.Args().First()
 	if newKeyStr == "" {
 		return fmt.Errorf("need to provide public key argument (as did:key)")
 	}
@@ -273,7 +267,7 @@ func runAccountPlcAddRotationKey(cctx *cli.Context) error {
 	}
 
 	// 1. fetch current PLC op: plc.directory/{did}/data
-	plcData, err := fetchPLCData(ctx, cctx.String("plc-host"), did)
+	plcData, err := fetchPLCData(ctx, cmd.String("plc-host"), did)
 	if err != nil {
 		return err
 	}
@@ -289,7 +283,7 @@ func runAccountPlcAddRotationKey(cctx *cli.Context) error {
 	}
 
 	// 2. update data
-	if cctx.Bool("first") {
+	if cmd.Bool("first") {
 		plcData.RotationKeys = slices.Insert(plcData.RotationKeys, 0, newKeyStr)
 	} else {
 		plcData.RotationKeys = append(plcData.RotationKeys, newKeyStr)
@@ -305,7 +299,7 @@ func runAccountPlcAddRotationKey(cctx *cli.Context) error {
 		return fmt.Errorf("failed decoding PLC op JSON: %w", err)
 	}
 
-	token := cctx.String("token")
+	token := cmd.String("token")
 	if token != "" {
 		body.Token = &token
 	}
